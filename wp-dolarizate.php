@@ -9,12 +9,13 @@
  */
  
  
-// Main files
+/*########################################################################*/
+//		  					   SETTINGS PAGE							  //
+/*########################################################################*/
+
 require_once dirname( __FILE__ ) .'/config-page.php';
 
-
 add_action('admin_menu', 'create_settings_page');
-
 function create_settings_page() {
 	add_menu_page('WP Dolarizate', 'WP Dolarizate', 'administrator', __FILE__, 'settings_page' , plugins_url('/icon.png', __FILE__) );
 	add_action( 'admin_init', 'register_settings' );
@@ -51,6 +52,11 @@ function register_settings() {
 	register_setting('wp-dolarizate-settings', 'dolar_type_cv');
 	register_setting('wp-dolarizate-settings', 'dolar_value');
 }
+
+/*########################################################################*/
+//		  					 END SETTINGS PAGE							  //
+/*########################################################################*/
+
 
 /*########################################################################*/
 //		  						CRON JOBS								  //
@@ -95,6 +101,45 @@ function currencyUpdate_XE(){
 /*########################################################################*/
 
 
+/*########################################################################*/
+//		  						SHORTCODES								  //
+/*########################################################################*/
+
+function sc_dolarizate_print($atts){
+    $default = array(
+        'valor' => '0',
+    );
+	
+    $attr = shortcode_atts($default, $atts);
+    
+	return floatval($attr['valor'])*floatval(get_option('dolar_value'));
+}
+add_shortcode('wp-dolarizate', 'sc_dolarizate_print'); 
+
+// Fix Visual Composer addons/shortcodes runtime error.
+function sc_dolarizate_print_forced($content){
+	
+	$data = getAllValues($content);
+	$i = 0;
+	foreach($data['value'] as $key=>$value){
+		$content = preg_replace('#\[wp\-dolarizate valor\=\'\d+\'\]#', $data['value'][$i], $content, 1);
+		$i++;
+	}
+
+	return $content;
+}
+
+add_filter('the_content', 'sc_dolarizate_print_forced', 12);
+
+/*########################################################################*/
+//		  					   END SHORTCODES							  //
+/*########################################################################*/
+
+
+/*########################################################################*/
+//		  					   OTHER FUNCTIONS							  //
+/*########################################################################*/
+
 function getCURL($url, $isJSON){
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -128,36 +173,6 @@ function getAllValues($content){
 }
 
 /*########################################################################*/
-//		  						SHORTCODES								  //
-/*########################################################################*/
-
-function sc_dolarizate_print($atts){
-    $default = array(
-        'valor' => '0',
-    );
-	
-    $attr = shortcode_atts($default, $atts);
-    
-	return floatval($attr['valor'])*floatval(get_option('dolar_value'));
-}
-add_shortcode('wp-dolarizate', 'sc_dolarizate_print'); 
-
-// Fix Visual Composer addons/shortcodes runtime error.
-function sc_dolarizate_print_forced($content){
-	
-	$data = getAllValues($content);
-	$i = 0;
-	foreach($data['value'] as $key=>$value){
-		$content = preg_replace('#\[wp\-dolarizate valor\=\'\d+\'\]#', $data['value'][$i], $content, 1);
-		$i++;
-	}
-
-	return $content;
-}
-
-add_filter('the_content', 'sc_dolarizate_print_forced', 12);
-
-/*########################################################################*/
-//		  					   END SHORTCODES							  //
+//		  				 END OTHER FUNCTIONS							  //
 /*########################################################################*/
 ?>
