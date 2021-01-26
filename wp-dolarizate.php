@@ -108,12 +108,30 @@ function getCURL($url, $isJSON){
 	return($content);
 }
 
+function getAllValues($content){
+    $offset = 0;
+    $allpos = array();
+    while(($pos = strpos($content, "[wp-dolarizate", $offset)) !== FALSE){
+		$tmpLast = strpos($content, "']", $pos);
+        $allpos['startposition'][] = $pos;
+		$allpos['endposition'][] = $tmpLast;
+		$allpos['value'][] = floatval(substr($content, $pos+22, $tmpLast-$pos-22))*floatval(get_option('dolar_value'));
+		$tmp_content = substr($content, $pos);
+		
+		
+		//$content = str_replace("[wp-dolarizate valor='116']", ""
+        $offset = $tmpLast; //Evite infinite loop
+	}
+	
+
+    return $allpos;
+}
 
 /*########################################################################*/
 //		  						SHORTCODES								  //
 /*########################################################################*/
 
-function sc_dolarizate_print($atts) {
+function sc_dolarizate_print($atts){
     $default = array(
         'valor' => '0',
     );
@@ -123,6 +141,21 @@ function sc_dolarizate_print($atts) {
 	return floatval($attr['valor'])*floatval(get_option('dolar_value'));
 }
 add_shortcode('wp-dolarizate', 'sc_dolarizate_print'); 
+
+// Fix Visual Composer addons/shortcodes runtime error.
+function sc_dolarizate_print_forced($content){
+	
+	$data = getAllValues($content);
+	$i = 0;
+	foreach($data['value'] as $key=>$value){
+		$content = preg_replace('#\[wp\-dolarizate valor\=\'\d+\'\]#', $data['value'][$i], $content, 1);
+		$i++;
+	}
+
+	return $content;
+}
+
+add_filter('the_content', 'sc_dolarizate_print_forced', 12);
 
 /*########################################################################*/
 //		  					   END SHORTCODES							  //
