@@ -120,10 +120,12 @@ add_shortcode('wp-dolarizate', 'sc_dolarizate_print');
 function sc_dolarizate_print_forced($content){
 	
 	$data = getAllValues($content);
-	$i = 0;
-	foreach($data['value'] as $key=>$value){
-		$content = preg_replace('#\[wp\-dolarizate valor\=\'\d+\'\]#', $data['value'][$i], $content, 1);
-		$i++;
+	if(!empty($data)){
+		$i = 0;
+		foreach($data['value'] as $key=>$value){
+			$content = preg_replace('#\[wp\-dolarizate valor\=\'\d+\'\]#', $data['value'][$i], $content, 1);
+			$i++;
+		}
 	}
 
 	return $content;
