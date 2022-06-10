@@ -27,20 +27,27 @@ function save_settings_page() {
 	update_option('update_time', $_POST['update_time']);
 	update_option('dolar_type', $_POST['dolar_type']);
 	update_option('dolar_type_cv', $_POST['dolar_type_cv']);
+
+	$dolar_valor_manual = $_POST['valor_dolar_manual'];
+
 	switch($_POST['api_dolar']){
 		case 0:
-		//DolarSI
-		currencyUpdate_DolarSI();
-		break;
+			//DolarSI
+			currencyUpdate_DolarSI();
+			break;
 		case 1:
-		//BCRA
-		break;
+			//BCRA
+			break;
 		case 2:
-		//BNA
-		break;
+			//BNA
+			break;
 		case 3:
-		//XEC
-		break;
+			//XEC
+			break;
+		case 4:
+			// Manual
+			currencyUpdate_Manual($dolar_valor_manual);
+			break;
 	}
     wp_redirect($_SERVER["HTTP_REFERER"], 302, 'WordPress');
 } 
@@ -94,6 +101,10 @@ function currencyUpdate_BNAOficial(){
 
 function currencyUpdate_XE(){
 
+}
+
+function currencyUpdate_Manual($valor_usd_manual){
+	update_option('dolar_value', $valor_usd_manual);
 }
 
 /*########################################################################*/

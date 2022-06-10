@@ -27,6 +27,7 @@ function settings_page() {
 						<option value="1" <?php is_selected(1, 'api_dolar'); ?>>Estadísticas BCRA</option>
 						<option value="2" <?php is_selected(2, 'api_dolar'); ?>>BNA (Inestable)</option>
 						<option value="3" <?php is_selected(3, 'api_dolar'); ?>>XE Currency Data API (Premium)</option>
+						<option value="4" <?php is_selected(4, 'api_dolar'); ?>>Valor Manual</option>
 					</select>
 				</td>
 			</tr>
@@ -72,6 +73,14 @@ function settings_page() {
 					?>
 					</select>
 				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row" style="width:300px;">Valor manual de dólar (Debe estar marcada la opción API Manual):</th>
+				<td>
+					<input type="text" name="valor_dolar_manual" value="<?=get_option('dolar_value')?>">
+				</td>
+
 			</tr>
 			
 			
