@@ -13,7 +13,7 @@
   <h3 align="center">WP Dolarizate</h3>
 
   <p align="center">
-    WP Dolarizate is a WordPress plugin for automatically currency exchange and display with Visual Composer.
+    WP Dolarizate es un plugin de WordPress que permite colocar un valor en dólares (USD) y mostrarlo automáticamente en Pesos Argentinos (ARS) compatible con Visual Composer.
     <br />
     <a href="https://github.com/PecceG2/"><strong>View all my projects »</strong></a>
     <br />
